@@ -17,20 +17,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
-            // PermissionsSeeder::class,
-
-
-
-//            UsersPermissionSeeder::class,
-//            UpworkProposalPermissionSeeder::class,
-//            WorkflowProjectPermissionSeeder::class,
-//            WorkflowTaskPermissionSeeder::class,
-//            ActivityPermissionSeeder::class,
-//            CrmEmployeeSeeder::class,
-//            FinanceInvoiceSeeder::class,
-//            WorkflowTaskManagerPermissionSeeder::class,
-//            RoleSeeder::class,
-//            UserSeeder::class,
+            PermissionSeeder::class,
+            RolePermissionSeeder::class,
+            UserPermissionSeeder::class,
         ]);
     }
 }

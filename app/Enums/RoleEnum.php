@@ -23,13 +23,4 @@ enum RoleEnum: string
         }
         return $keyValues;
     }
-
-    public static function getColorsArray(): array
-    {
-        $colors = [];
-        foreach (self::cases() as $case) {
-            $colors[$case->value] = $case->getColor();
-        }
-        return $colors;
-    }
 }
