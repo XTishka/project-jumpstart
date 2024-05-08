@@ -1,0 +1,169 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
+use Filament\Forms;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Support\Enums\FontFamily;
+use Filament\Support\Enums\IconPosition;
+use Filament\Tables;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ForceDeleteAction;
+use Filament\Tables\Actions\RestoreAction;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Hash;
+
+class UserResource extends Resource
+{
+    protected static ?string $model = User::class;
+
+    protected static ?int $navigationSort = 10;
+
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                TextInput::make('name')
+                    ->label(__('users.form.column.name'))
+                    ->inlineLabel()
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(255),
+
+                TextInput::make('email')
+                    ->label(__('users.form.column.email'))
+                    ->inlineLabel()
+                    ->email()
+                    ->unique(ignoreRecord: true)
+                    ->required()
+                    ->maxLength(255),
+
+                TextInput::make('password')
+                    ->label(__('users.form.column.password'))
+                    ->inlineLabel()
+                    ->password()
+                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(fn(string $context): bool => $context === 'create')
+                    ->label(fn(string $context): string => ($context === 'create') ? __('users.form.column.password') : __('users.form.column.new_password')),
+
+                Select::make('role')
+                    ->label(__('users.form.column.role'))
+                    ->inlineLabel()
+                    ->relationship('roles', 'name')
+                    ->columns(3)
+                    ->required(),
+            ])
+            ->columns([
+                'sm' => 1,
+                'xl' => 1,
+                '2xl' => 1,
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('users.table.column.name'))
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label(__('users.table.column.role'))
+                    ->formatStateUsing(fn (string $state): string => __("users.enum.role.{$state}"))
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('email')
+                    ->label(__('users.table.column.email'))
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('users.table.column.created_at'))
+                    ->dateTime('d.m.Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('users.table.column.updated_at'))
+                    ->dateTime('d.m.Y')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->label(__('users.table.column.deleted_at'))
+                    ->dateTime('d.m.Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+            ])
+            ->filters([
+                TrashedFilter::make(),
+            ])
+            ->actions([
+                EditAction::make(),
+                DeleteAction::make(),
+                ForceDeleteAction::make(),
+                RestoreAction::make(),
+            ])
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListUsers::route('/'),
+        ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament-logger::filament-logger.nav.group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('users.nav.label');
+    }
+
+    public static function getLabel(): string
+    {
+        return __('users.resource.label');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('users.resource.label.plural');
+    }
+}
