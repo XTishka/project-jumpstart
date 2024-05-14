@@ -26,6 +26,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserResource extends Resource
 {
@@ -67,6 +68,7 @@ class UserResource extends Resource
                     ->label(__('users.form.column.role'))
                     ->inlineLabel()
                     ->relationship('roles', 'name')
+                    ->getOptionLabelFromRecordUsing(fn (Role $record) => __("role.name.{$record->name}"))
                     ->columns(3)
                     ->required(),
             ])
@@ -88,7 +90,7 @@ class UserResource extends Resource
 
                 Tables\Columns\TextColumn::make('roles.name')
                     ->label(__('users.table.column.role'))
-                    ->formatStateUsing(fn (string $state): string => __("users.enum.role.{$state}"))
+                    ->formatStateUsing(fn(string $state): string => __("role.name.{$state}"))
                     ->searchable()
                     ->sortable(),
 

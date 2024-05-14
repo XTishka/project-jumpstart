@@ -30,7 +30,4 @@ return [
     'form.column.email'        => 'Электронная почта',
     'form.column.password'     => 'Пароль',
     'form.column.new_password' => 'Новый пароль',
-
-    'enum.role.administrator' => 'Администратор',
-    'enum.role.employer'      => 'Сотрудник',
 ];
