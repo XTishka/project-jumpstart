@@ -24,9 +24,9 @@ class ListUsers extends ListRecords
     public function getTabs(): array
     {
         $roles = Role::all()->pluck('name', 'id')->toArray();
-        $tabs = [__('users.tabs.roles.all') => Tab::make()];
+        $tabs = [__('user.tabs.roles.all') => Tab::make()];
         foreach ($roles as $id => $role):
-             $tabs[__('users.tabs.roles.'.$role)] = Tab::make()
+             $tabs[__('user.tabs.roles.'.$role)] = Tab::make()
                 ->modifyQueryUsing(function (Builder $query) use ($id) {
                     $query->whereHas('roles', function (Builder $query) use ($id) {
                         $query->where('roles.id', $id);

@@ -41,14 +41,14 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label(__('users.form.column.name'))
+                    ->label(__('user.form.column.name'))
                     ->inlineLabel()
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255),
 
                 TextInput::make('email')
-                    ->label(__('users.form.column.email'))
+                    ->label(__('user.form.column.email'))
                     ->inlineLabel()
                     ->email()
                     ->unique(ignoreRecord: true)
@@ -56,16 +56,16 @@ class UserResource extends Resource
                     ->maxLength(255),
 
                 TextInput::make('password')
-                    ->label(__('users.form.column.password'))
+                    ->label(__('user.form.column.password'))
                     ->inlineLabel()
                     ->password()
                     ->dehydrateStateUsing(fn($state) => Hash::make($state))
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn(string $context): bool => $context === 'create')
-                    ->label(fn(string $context): string => ($context === 'create') ? __('users.form.column.password') : __('users.form.column.new_password')),
+                    ->label(fn(string $context): string => ($context === 'create') ? __('user.form.column.password') : __('user.form.column.new_password')),
 
                 Select::make('role')
-                    ->label(__('users.form.column.role'))
+                    ->label(__('user.form.column.role'))
                     ->inlineLabel()
                     ->relationship('roles', 'name')
                     ->getOptionLabelFromRecordUsing(fn (Role $record) => __("role.name.{$record->name}"))
@@ -84,36 +84,36 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label(__('users.table.column.name'))
+                    ->label(__('user.table.column.name'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('roles.name')
-                    ->label(__('users.table.column.role'))
+                    ->label(__('user.table.column.role'))
                     ->formatStateUsing(fn(string $state): string => __("role.name.{$state}"))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('email')
-                    ->label(__('users.table.column.email'))
+                    ->label(__('user.table.column.email'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('users.table.column.created_at'))
+                    ->label(__('user.table.column.created_at'))
                     ->dateTime('d.m.Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('users.table.column.updated_at'))
+                    ->label(__('user.table.column.updated_at'))
                     ->dateTime('d.m.Y')
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->label(__('users.table.column.deleted_at'))
+                    ->label(__('user.table.column.deleted_at'))
                     ->dateTime('d.m.Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -156,16 +156,16 @@ class UserResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('users.nav.label');
+        return __('user.nav.label');
     }
 
     public static function getLabel(): string
     {
-        return __('users.resource.label');
+        return __('user.resource.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return __('users.resource.label.plural');
+        return __('user.resource.label.plural');
     }
 }
